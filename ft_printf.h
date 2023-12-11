@@ -28,7 +28,8 @@
 int		ft_printf(const char *format, ...);
 
 char	*ft_uitoa(unsigned int nb);
-char	*ft_ultoa_hex(unsigned long nb);
+char	*ft_uitoa_base(unsigned int nb, const char *base);
 char	*ft_ultoa_buf_base(unsigned long abs,
 						   char *buf, size_t length, const char *base);
+char	*ft_print_pointer(unsigned long long nb);
 #endif //FT_PRINTF_H

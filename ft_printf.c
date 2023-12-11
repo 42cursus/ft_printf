@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include "ft_printf.h"
 
 int	do_print(
@@ -17,7 +18,8 @@ int	do_print(
 		va_list			*argp,
 		/* character output routine */
 		void			(*putc)(char),
-		int			radix)		/* default radix - for '%r' */
+		/* default radix - for '%r' */
+		int			radix)
 {
 	(void )radix;
 	register char	c;
@@ -28,10 +30,8 @@ int	do_print(
 	i = 0;
 	while (c != '\0')
 	{
-		if (c != '%') {
-			(*putc)(c);
-			i++;
-		} else {
+		if (c == '%')
+		{
 			c = *++fmt;
 			if (c == 'c') {
 				(*putc)(va_arg(*argp, int));
@@ -41,38 +41,59 @@ int	do_print(
 				(*putc)('%');
 				i++;
 			}
-			if (c == 'p')
-				i += printf("%p", va_arg(*argp, void *));
+			if (c == 'p') {
+				const void *ptr = va_arg(*argp, void *);
+				str = ft_print_pointer((unsigned long long int) ptr);
+				if (!str) {
+					free(str);
+					c = *++fmt;
+					continue;
+				}
+				ft_putstr_fd(str, STDOUT_FILENO);
+				i += ft_strlen(str);
+				free(str);
+			}
 			if ((c == 'd') || (c == 'i')) {
 				str = ft_itoa(va_arg(*argp, int));
 				if (!str) {
 					free(str);
 					c = *++fmt;
-					continue ;
+					continue;
 				}
 				ft_putstr_fd(str, STDOUT_FILENO);
 				i += ft_strlen(str);
 				free(str);
 			}
-			if (c == 'u'){
-				str = ft_uitoa((unsigned int)va_arg(*argp, unsigned int));
+			if (c == 'u') {
+				str = ft_uitoa((unsigned int) va_arg(*argp, unsigned int));
 				if (!str) {
 					free(str);
 					c = *++fmt;
-					continue ;
+					continue;
 				}
 				ft_putstr_fd(str, STDOUT_FILENO);
 				i += ft_strlen(str);
 				free(str);
 			}
-			if (c == 'x'){
-
-				ulong l = va_arg(*argp, unsigned long);
-				str = ft_ultoa_hex(l);
+			if (c == 'x') {
+				str = ft_uitoa_base(va_arg(*argp, unsigned long),
+									"0123456789abcdef");
 				if (!str) {
 					free(str);
 					c = *++fmt;
-					continue ;
+					continue;
+				}
+				ft_putstr_fd(str, STDOUT_FILENO);
+				i += ft_strlen(str);
+				free(str);
+			}
+			if (c == 'X') {
+				str = ft_uitoa_base(va_arg(*argp, unsigned long),
+									"0123456789ABCDEF");
+				if (!str) {
+					free(str);
+					c = *++fmt;
+					continue;
 				}
 				ft_putstr_fd(str, STDOUT_FILENO);
 				i += ft_strlen(str);
@@ -85,11 +106,17 @@ int	do_print(
 					ft_putstr_fd(str, STDOUT_FILENO);
 					i += ft_strlen(str);
 					c = *++fmt;
-					continue ;
+					continue;
 				}
 				ft_putstr_fd(str, STDOUT_FILENO);
 				i += ft_strlen(str);
 			}
+			if (c == '\0') {
+				fmt--;
+			}
+		} else {
+			(*putc)(c);
+			i++;
 		}
 		c = *++fmt;
 	}
@@ -104,21 +131,17 @@ void	ft_putchar(char c)
 int	ft_printf(const char *format, ...)
 {
 	va_list		args;
-	int	i;
+	char		*str;
+	int	count;
 
 	if (!format || !*format)
 		return (0);
+	str = ft_strdup((char *)format);
+	if (!str || *str == '\0')
+		return (0);
 	va_start(args, format);
-	i = do_print(format, &args, ft_putchar, 16);
+	count = do_print(str, &args, ft_putchar, 16);
 	va_end(args);
-	return (i);
+	free(str);
+	return (count);
 }
-
-
-//int main()
-//{
-//	ft_printf("%c", '0');
-//	printf("\n");
-//	printf("\n--%d",ft_printf("%s", "Hey Ho!"));
-//	return (0);
-//}

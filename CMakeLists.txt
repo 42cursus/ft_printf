@@ -7,24 +7,27 @@ set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_C_STANDARD 90)
 
 cmake_policy(SET CMP0048 NEW)
+cmake_policy(SET CMP0075 NEW)
 project("ft_printf" VERSION 0.1.0 LANGUAGES C CXX ASM)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_REQUIRED_LIBRARIES "-lbsd")
 
 include_directories(include)
 
-add_custom_target(BuildTheLib ALL
-        COMMAND cd ../../libft
+add_custom_target(libft.a ALL)
+add_custom_command(TARGET libft.a POST_BUILD
+        COMMAND cd ${CMAKE_SOURCE_DIR}/libft
         COMMAND make
+        COMMAND cp -v libft.a ${CMAKE_CURRENT_BINARY_DIR}/
+#        BYPRODUCTS libft.a
         )
-
 add_library(FTLIB STATIC IMPORTED)
+#add_dependencies(FTLIB libft.a)
 set_target_properties(FTLIB PROPERTIES
-        IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/../libft/libft.a # Make sure to use absolute path here
+        IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/libft.a # Make sure to use absolute path here
         INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/include
         INTERFACE_COMPILE_DEFINITIONS "OPTIMISTIC"
-        )
-add_dependencies(FTLIB BuildTheLib)
+)
 
 set(FT_CFLAGS
         -g3
@@ -56,9 +59,10 @@ set(TARGET_SOURCES
 file(GLOB TARGET_HEADERS "src/*.h")
 file(GLOB TARGET_SOURCES "src/*.c")
 
+set(TARGET_LINK_FLAGS "")
 set(TARGET_CFLAGS
         -c -w
-        -g
+        -g3
         -fno-exceptions
         -ffunction-sections
         -fdata-sections
@@ -71,5 +75,5 @@ find_package (Threads REQUIRED)
 add_executable(${TARGET_NAME} ${TARGET_HEADERS} ${TARGET_SOURCES})
 target_include_directories(${TARGET_NAME} PRIVATE include src)
 target_compile_options(${TARGET_NAME} PRIVATE ${TARGET__CFLAGS})
-target_link_options(${TARGET_NAME} PRIVATE ${DMP_LINK_FLAGS})
-target_link_libraries(${TARGET_NAME} bsd ftprintf Threads::Threads)
+target_link_options(${TARGET_NAME} PRIVATE ${TARGET_LINK_FLAGS})
+target_link_libraries(${TARGET_NAME} bsd ${FTPRINTF_TARGET_NAME} Threads::Threads)

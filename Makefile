@@ -11,26 +11,28 @@
 # **************************************************************************** #
 
 
-NAME	=	libftprintf.a
-CC		=	gcc
-CFLAGS  =	-gdwarf-2 -g3 -ggdb3 \
-				-Wall -Wextra -Werror \
-				-pthread \
-				-ffunction-sections \
-				-fdata-sections \
-				-MMD -fcf-protection=none -mmanual-endbr
-AR				=	ar
-ARFLAGS 		=	rcs
+NAME		=	libftprintf.a
+CC			=	clang
+CFLAGS		=	-gdwarf-2 -g3 -ggdb3 \
+					-Wall -Wextra -Werror \
+					-pthread \
+					-ffunction-sections \
+					-fdata-sections \
+					-MMD -fcf-protection=none
+AR			=	ar
+ARFLAGS		=	rcs
 LIBFT_PATH	=	./libft
 LIBFT		=	$(LIBFT_PATH)/libft.a
 RM 			:=	rm -rf
 
-SRC_FILES := ft_printf.c \
+SRC_FILES	:= ft_printf.c \
 				ft_print_unsigned.c \
 				ft_print_hex.c
 
-OBJ_DIR			=	obj
-OBJS			=	$(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
+OBJ_DIR		=	obj
+OBJS		=	$(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
+
+all:				$(NAME)
 
 $(OBJ_DIR)/%.o:		%.c
 					$(CC) $(CFLAGS) -c $< -o $@
@@ -45,9 +47,6 @@ $(LIBFT):
 
 $(OBJ_DIR):
 					mkdir -pv $(OBJ_DIR)
-
-all:				$(NAME)
-
 
 $(OBJ_DIR)/main.o:	src/main.c $(OBJ_DIR)
 					$(CC) $(CFLAGS) -c $< -o $@
@@ -66,4 +65,7 @@ fclean:				clean
 
 re:					fclean all main
 
-.PHONY:				all bonus clean fclean re libft
+norm:
+					@norminette $(SRC) $(INCLUDE) | grep -v Norme -B1 || true
+
+.PHONY:				all bonus clean fclean re libft norm

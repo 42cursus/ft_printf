@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-size_t	get_hex_buf_size(unsigned long nb)
+size_t	get_hex_buf_size(unsigned long long int nb)
 {
 	ulong		size;
 	int const	hexadecimal_radix = 16;
@@ -26,10 +26,9 @@ size_t	get_hex_buf_size(unsigned long nb)
 	return (++size);
 }
 
-char	*ft_ultoa_hex(unsigned long nb)
+char	*ft_uitoa_base(unsigned int nb, const char *base)
 {
 	char				*buf;
-	const char			*base = "0123456789abcdef";
 	size_t				buf_size;
 
 	buf_size = get_hex_buf_size(nb);
@@ -38,4 +37,24 @@ char	*ft_ultoa_hex(unsigned long nb)
 		return (NULL);
 	ft_bzero(buf, buf_size);
 	return (ft_ultoa_buf_base(nb, buf, buf_size, base));
+}
+
+char	*ft_print_pointer(unsigned long long nb)
+{
+	char				*buf;
+	unsigned long long	buf_size;
+
+	buf_size = get_hex_buf_size(nb);;
+	if (nb == 0)
+		buf_size = 4;
+	buf = (char *)malloc(sizeof(char) * buf_size + 2);
+	if (!buf)
+		return (NULL);
+	buf[buf_size + 1] = '\0';
+	if (nb == 0 && ft_memcpy(buf, "(nil)", buf_size + 1))
+		return (buf);
+	ft_memset(buf, '0', buf_size);
+	buf[1] = 'x';
+	ft_ultoa_buf_base(nb, buf + 2, buf_size, "0123456789abcdef");
+	return (buf);
 }
