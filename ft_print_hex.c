@@ -44,7 +44,7 @@ char	*ft_print_pointer(unsigned long long nb)
 	char				*buf;
 	unsigned long long	buf_size;
 
-	buf_size = get_hex_buf_size(nb);;
+	buf_size = get_hex_buf_size(nb);
 	if (nb == 0)
 		buf_size = 4;
 	buf = (char *)malloc(sizeof(char) * buf_size + 2);

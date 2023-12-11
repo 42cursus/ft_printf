@@ -26,10 +26,9 @@ size_t	get_uint_buf_size(unsigned int nb)
 	return (++size);
 }
 
-char *ft_ultoa_buf_base(unsigned long abs, char *buf, size_t length,
+char	*ft_ultoa_buf_base(unsigned long abs, char *buf, size_t length,
 						const char *base)
 {
-
 	char				*ptr;
 	char				c;
 	unsigned int const	radix = ft_strlen(base);
@@ -59,4 +58,3 @@ char	*ft_uitoa(unsigned int nb)
 	ft_bzero(buf, buf_size);
 	return (ft_ultoa_buf_base(nb, buf, buf_size, base));
 }
-

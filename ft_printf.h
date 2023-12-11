@@ -27,9 +27,20 @@
 /* ---------- PRINTF -------------------- */
 int		ft_printf(const char *format, ...);
 
+typedef size_t	(*t_ft_print_dispatch_f)(va_list *ap);
+
+size_t	ft_print_p(va_list *argp);
+size_t	ft_print_d(va_list *argp);
+size_t	ft_print_s(va_list *argp);
+size_t	ft_print_x(va_list *argp);
+size_t	ft_print_upperx(va_list *argp);
+size_t	ft_print_u(va_list *argp);
+size_t	ft_print_c(va_list *argp);
+size_t	ft_print_percent(va_list *argp);
+
 char	*ft_uitoa(unsigned int nb);
 char	*ft_uitoa_base(unsigned int nb, const char *base);
 char	*ft_ultoa_buf_base(unsigned long abs,
-						   char *buf, size_t length, const char *base);
+			char *buf, size_t length, const char *base);
 char	*ft_print_pointer(unsigned long long nb);
 #endif //FT_PRINTF_H

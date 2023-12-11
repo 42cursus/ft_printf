@@ -27,7 +27,9 @@ RM 			:=	rm -rf
 
 SRC_FILES	:= ft_printf.c \
 				ft_print_unsigned.c \
-				ft_print_hex.c
+				ft_print_hex.c \
+				ft_printf_utils1.c \
+				ft_printf_utils2.c
 
 OBJ_DIR		=	obj
 OBJS		=	$(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
