@@ -66,4 +66,7 @@ fclean: clean
 
 re: fclean all
 
+norm:
+		@norminette $(SRC_FILES)
+
 .PHONY: all clean flean re bonus

@@ -75,7 +75,6 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size)
 	return (dest_len + ft_strlcpy(dest, src, osize - dest_len));
 }
 
-
 /**
  * The ft_strnstr() function locates the first occurrence of the null-terminated
  * string little in the string big, where not more than len characters are

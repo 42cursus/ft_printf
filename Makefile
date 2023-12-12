@@ -66,5 +66,6 @@ re:					fclean all main
 
 norm:
 					@norminette $(SRC_FILES:%.c=$(SRC_DIR)/%.c) $(INC_DIR)/*
+					make -C $(LIBFT_PATH) norm
 
 .PHONY:				all bonus clean fclean re libft norm
