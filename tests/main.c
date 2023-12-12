@@ -11,16 +11,17 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
+/*
+ * fflush(stdout);
+ * printf("%015d", 0);
+ * fflush(stdout);
+ * */
 int	main(void)
 {
-	printf("%015d", 0);
-	fflush(stdout);
 	ft_printf("\n---%x\n", 0);
-	fflush(stdout);
-	ft_printf("%a%x", 0);
-	ft_printf("%a%x", 0);
-	ft_printf("%", 0);
+	ft_printf("\n%a%x", 0);
+	ft_printf("\n%x", 0);
+	ft_printf("\n%", 0);
 	return (0);
 }
