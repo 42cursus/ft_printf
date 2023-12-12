@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdint.h>
 #include "ft_printf.h"
 
 static t_ft_print_dispatch_f	const
@@ -33,8 +32,8 @@ void	ft_putchar(char c)
 
 int	do_print(const char	*fmt, va_list *argp, void (*putc)(char))
 {
-	size_t			i;
-	register char	c;
+	size_t					i;
+	register char			c;
 
 	i = 0;
 	c = *fmt;
@@ -44,13 +43,14 @@ int	do_print(const char	*fmt, va_list *argp, void (*putc)(char))
 		{
 			(*putc)(c);
 			i++;
+			c = *++fmt;
 			continue ;
 		}
 		c = *++fmt;
-		if (c == '\0')
-			fmt--;
-		else
+		if (c != '\0' && g_ft_print_dispatch[(unsigned char) c])
 			i += g_ft_print_dispatch[(unsigned char) c](argp);
+		else
+			fmt--;
 		c = *++fmt;
 	}
 	return (i);

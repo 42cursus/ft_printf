@@ -12,16 +12,12 @@
 
 
 NAME		=	libftprintf.a
+LIBTMP		=	libtmp.a
 CC			=	clang
-CFLAGS		=	-gdwarf-2 -g3 -ggdb3 \
-					-Wall -Wextra -Werror \
-					-pthread \
-					-ffunction-sections \
-					-fdata-sections \
-					-MMD -fcf-protection=none
+CFLAGS		=	-g3 -Wall -Wextra -Werror -iquote $(INC_DIR)/
 AR			=	ar
 ARFLAGS		=	rcs
-LIBFT_PATH	=	./libft
+LIBFT_PATH	=	./lib/libft
 LIBFT		=	$(LIBFT_PATH)/libft.a
 RM 			:=	rm -rf
 
@@ -31,18 +27,20 @@ SRC_FILES	:= ft_printf.c \
 				ft_printf_utils1.c \
 				ft_printf_utils2.c
 
+INC_DIR		=	include
 OBJ_DIR		=	obj
+SRC_DIR		=	src
 OBJS		=	$(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
 
 all:				$(NAME)
 
-$(OBJ_DIR)/%.o:		%.c
+$(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 					$(CC) $(CFLAGS) -c $< -o $@
 
 
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
-					@cp	$(LIBFT) $(NAME)
-					$(AR) $(ARFLAGS) $(NAME) $(OBJS)
+					$(AR) $(ARFLAGS) $(OBJ_DIR)/$(LIBTMP) $(OBJS)
+					$(CC) -nostdlib -r -o $(NAME) $(OBJ_DIR)/ft_printf.o -Wl,--no-whole-archive $(OBJ_DIR)/$(LIBTMP) $(LIBFT)
 
 $(LIBFT):
 					make -C $(LIBFT_PATH) all
@@ -50,12 +48,11 @@ $(LIBFT):
 $(OBJ_DIR):
 					mkdir -pv $(OBJ_DIR)
 
-$(OBJ_DIR)/main.o:	src/main.c $(OBJ_DIR)
+$(OBJ_DIR)/main.o:	tests/main.c $(OBJ_DIR)
 					$(CC) $(CFLAGS) -c $< -o $@
 
-main:				$(OBJ_DIR)/main.o $(NAME)
+main:				$(OBJ_DIR)/main.o $(NAME) $(LIBFT)
 					$(CC) -lm $^ -o $@
-					./main
 
 clean:
 					make -C $(LIBFT_PATH) clean
@@ -68,6 +65,6 @@ fclean:				clean
 re:					fclean all main
 
 norm:
-					@norminette $(SRC) $(INCLUDE) | grep -v Norme -B1 || true
+					@norminette $(SRC_FILES:%.c=$(SRC_DIR)/%.c) $(INC_DIR)/*
 
 .PHONY:				all bonus clean fclean re libft norm

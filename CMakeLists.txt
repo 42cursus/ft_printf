@@ -16,7 +16,7 @@ include_directories(include)
 
 add_custom_target(libft.a ALL)
 add_custom_command(TARGET libft.a POST_BUILD
-        COMMAND cd ${CMAKE_SOURCE_DIR}/libft
+        COMMAND cd ${CMAKE_SOURCE_DIR}/lib/libft
         COMMAND make
         COMMAND cp -v libft.a ${CMAKE_CURRENT_BINARY_DIR}/
 #        BYPRODUCTS libft.a
@@ -41,8 +41,8 @@ set(FTPRINTF_HEADERS
 set(FTPRINTF_SOURCES
         "")
 
-file(GLOB FTPRINTF_HEADERS "ft_*.h")
-file(GLOB FTPRINTF_SOURCES "ft_*.c")
+file(GLOB FTPRINTF_HEADERS "src/ft_*.h")
+file(GLOB FTPRINTF_SOURCES "src/ft_*.c")
 
 #Generate the library from the sources
 add_library(${FTPRINTF_TARGET_NAME} STATIC ${FTPRINTF_HEADERS} ${FTPRINTF_SOURCES})
@@ -56,8 +56,8 @@ set(TARGET_HEADERS
 set(TARGET_SOURCES
         "")
 
-file(GLOB TARGET_HEADERS "src/*.h")
-file(GLOB TARGET_SOURCES "src/*.c")
+file(GLOB TARGET_HEADERS "tests/*.h")
+file(GLOB TARGET_SOURCES "tests/*.c")
 
 set(TARGET_LINK_FLAGS "")
 set(TARGET_CFLAGS
