@@ -37,10 +37,10 @@ all:				$(NAME)
 $(OBJ_DIR)/%.o:		$(SRC_DIR)/%.c
 					$(CC) $(CFLAGS) -c $< -o $@
 
-
 $(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
 					$(AR) $(ARFLAGS) $(OBJ_DIR)/$(LIBTMP) $(OBJS)
-					$(CC) -nostdlib -r -o $(NAME) $(OBJ_DIR)/ft_printf.o -Wl,--no-whole-archive $(OBJ_DIR)/$(LIBTMP) $(LIBFT)
+					$(CC) -nostdlib -r -o $(NAME) $(OBJ_DIR)/ft_printf.o \
+						-Wl,--no-whole-archive $(OBJ_DIR)/$(LIBTMP) $(LIBFT)
 
 $(LIBFT):
 					make -C $(LIBFT_PATH) all
